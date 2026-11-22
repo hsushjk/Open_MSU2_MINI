@@ -13,7 +13,7 @@ module.exports = function boardViews({ text, rect, line, figure }) {
   const mx = (mm) => X0 + mm * MM;
 
   p.push(text(48, 46, 'MSU2_MINI 正反两面', { size: 24, weight: '600' }));
-  p.push(text(48, 74, '板长 45.5 mm、板宽 13 mm、板厚 2.0 mm（用户实测）；比例为 1:1，即 20 px = 1 mm', { size: 13, fill: '#555' }));
+  p.push(text(48, 74, '板长 45.5 mm、板宽 13 mm、板厚 2.0 mm（实测）；比例为 1:1，即 20 px = 1 mm', { size: 13, fill: '#555' }));
   p.push(text(48, 96, '板面按实物照片定序，纵向位置为按比例估算，误差约 ±1 mm', { size: 12, fill: '#8a5a24' }));
 
   // ---------------------------------------------------------------- 正面

@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1040" viewBox="0 0 1240 1040">
 <rect width="1240" height="1040" fill="#ffffff"/>
 <text x="48" y="46" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="24" fill="#1b1b1b" font-weight="600" text-anchor="start" opacity="1"><tspan x="48" dy="0">MSU2_MINI 正反两面</tspan></text>
-<text x="48" y="74" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="13" fill="#555" font-weight="400" text-anchor="start" opacity="1"><tspan x="48" dy="0">板长 45.5 mm、板宽 13 mm、板厚 2.0 mm（用户实测）；比例为 1:1，即 20 px = 1 mm</tspan></text>
+<text x="48" y="74" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="13" fill="#555" font-weight="400" text-anchor="start" opacity="1"><tspan x="48" dy="0">板长 45.5 mm、板宽 13 mm、板厚 2.0 mm（实测）；比例为 1:1，即 20 px = 1 mm</tspan></text>
 <text x="48" y="96" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="12" fill="#8a5a24" font-weight="400" text-anchor="start" opacity="1"><tspan x="48" dy="0">板面按实物照片定序，纵向位置为按比例估算，误差约 ±1 mm</tspan></text>
 <text x="48" y="126" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#1b1b1b" font-weight="600" text-anchor="start" opacity="1"><tspan x="48" dy="0">正面（贴屏面）：USB 触点、屏、触摸电极，别无其他</tspan></text>
 <rect x="150" y="150" width="910" height="260" rx="8" fill="#f4f1e6" stroke="#5a5346" stroke-width="1.8"/>
