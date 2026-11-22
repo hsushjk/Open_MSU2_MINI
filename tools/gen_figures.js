@@ -167,72 +167,72 @@ function blockDiagram() {
   return figure(W, H, p);
 }
 
-// ---------------------------------------------------------------- 外形示意
+// ---------------------------------------------------------------- 外形与尺寸
 function boardSketch() {
   const p = [];
-  const W = 1240, H = 660;
+  const W = 1240, H = 700;
 
-  p.push(text(48, 46, 'MSU2_MINI 外形与功能分区示意', { size: 24, weight: '600' }));
-  p.push(text(48, 74, '尺寸据实物照片估测，约 54 × 18 mm，板厚约 1.6 mm。分区位置为示意排列，不是测绘结果', { size: 13, fill: '#555' }));
+  // 20 px = 1 mm
+  const BX = 140, BY = 200, BW = 910, BH = 260;   // 45.5 x 13 mm
 
-  // 板轮廓：USB 舌片 + 主板
-  p.push(poly('60,196 300,196 300,140 1180,140 1180,470 300,470 300,414 60,414',
-    { fill: '#f4f1e6', stroke: '#5a5346', sw: 1.8 }));
+  p.push(text(48, 46, 'MSU2_MINI 外形与尺寸', { size: 24, weight: '600' }));
+  p.push(text(48, 74, '长度 45.5 mm、宽度 13 mm 为用户实测；触点区按 USB-A 规范、屏按可视比例绘制', { size: 13, fill: '#555' }));
 
-  // USB 金手指
-  [214, 264, 314, 364].forEach((y) => {
-    p.push(rect(84, y, 196, 30, { fill: '#d9b45a', stroke: '#8a6d24', rx: 3 }));
+  // 板轮廓
+  p.push(rect(BX, BY, BW, BH, { fill: '#f4f1e6', stroke: '#5a5346', sw: 1.8, rx: 8 }));
+
+  // 屏模组（推算尺寸，略宽于板，画在板之上以便看出外扩）
+  p.push(rect(420, 195, 480, 270, { fill: 'none', stroke: '#9dbadd', dash: '6 5', sw: 1.2, rx: 3 }));
+  p.push(text(902, 188, '屏模组外形（推算，未实测）', { size: 10.5, anchor: 'end', fill: '#7d97b8' }));
+
+  // 可视区
+  p.push(rect(443, 221, 434, 218, { fill: '#ffffff', stroke: '#3a6ba8', dash: '8 5', sw: 1.6 }));
+  p.push(text(660, 322, '可视区 160 × 80', { size: 14, anchor: 'middle', fill: '#3a6ba8' }));
+  p.push(text(660, 348, '约 21.7 × 10.9 mm', { size: 12, anchor: 'middle', fill: '#3a6ba8' }));
+
+  // USB-A 触点区
+  p.push(rect(150, 238, 150, 166, { fill: 'none', stroke: '#8a6d24', dash: '5 4', sw: 1.2, rx: 3 }));
+  const pins = [['252', 'VBUS', '5 V'], ['292', 'D−', 'PC16'], ['332', 'D+', 'PC17'], ['372', 'GND', '公共地']];
+  pins.forEach(([y, net, pin]) => {
+    const yy = Number(y);
+    p.push(rect(162, yy, 120, 18, { fill: '#d9b45a', stroke: '#8a6d24', rx: 2 }));
+    p.push(text(304, yy + 14, net, { size: 12, mono: true }));
+    p.push(text(354, yy + 14, pin, { size: 11.5, fill: '#666' }));
   });
-  p.push(text(182, 190, 'USB-A 触点：VBUS / D− / D+ / GND', { size: 12, anchor: 'middle', fill: '#5a5346' }));
-  p.push(text(182, 442, '板边直接引出，无连接器', { size: 11, anchor: 'middle', fill: '#7a7264' }));
-
-  const zone = (x, y, w, h, title, sub, fill) => {
-    p.push(rect(x, y, w, h, { fill, dash: '6 4', stroke: '#7a7264', sw: 1.2, rx: 4 }));
-    p.push(text(x + 12, y + 26, title, { size: 13.5, weight: '600' }));
-    if (sub) p.push(text(x + 12, y + 48, sub, { size: 11.5, fill: '#5b5347', lh: 16 }));
-  };
-
-  zone(320, 158, 170, 122, '电源', 'U3 XC6206P33\nC1 / C2 10 µF', '#fdf3e7');
-  zone(320, 300, 170, 150, '主控', 'U1 QFN-20\n48 MHz', '#eef7ef');
-  zone(510, 158, 160, 122, '存储', 'U2 P25D80H\n1 MB SPI NOR', '#eef4fb');
-  zone(510, 300, 160, 150, '触摸', 'TP1 焊盘\n固件采样 ADC 通道 9', '#f3eefa');
-  zone(690, 158, 470, 244, '显示', '屏 0.96 英寸 160×80，ST7735S，8 脚 0.5 mm FPC', '#e8f1fb');
-
-  // 可视区与 FPC 座
-  p.push(rect(784, 232, 330, 150, { fill: '#ffffff', stroke: '#3a6ba8', dash: '8 5', sw: 1.6 }));
-  p.push(text(949, 300, '可视区 160 × 80', { size: 13.5, anchor: 'middle', fill: '#3a6ba8' }));
-  p.push(text(949, 322, '约 21.7 × 10.9 mm', { size: 11.5, anchor: 'middle', fill: '#3a6ba8' }));
-  p.push(rect(790, 384, 320, 14, { fill: '#cfd8e6', stroke: '#3a6ba8' }));
-  p.push(text(950, 380, 'J1  8P FPC 座', { size: 10.5, anchor: 'middle', fill: '#3a6ba8' }));
-
-  // 排针焊盘带
-  p.push(rect(690, 410, 470, 50, { fill: '#f6f6f6', dash: '5 4', stroke: '#7a7264', sw: 1.2, rx: 4 }));
-  p.push(text(702, 440, 'JP1 / JP2 / JP3：2.54 mm 焊盘阵列，板上无器件', { size: 11.5, fill: '#5b5347' }));
+  p.push(text(150, 232, 'USB-A 触点区', { size: 11.5, fill: '#8a6d24' }));
 
   // 尺寸标注
-  p.push(line(300, 496, 1180, 496, { stroke: '#888', sw: 1 }));
-  p.push(line(300, 486, 300, 506, { stroke: '#888' }));
-  p.push(line(1180, 486, 1180, 506, { stroke: '#888' }));
-  p.push(text(740, 516, '约 54 mm（估测）', { size: 11.5, anchor: 'middle', fill: '#666' }));
+  p.push(line(BX, 482, BX + BW, 482, { stroke: '#888', sw: 1 }));
+  p.push(line(BX, 472, BX, 492, { stroke: '#888' }));
+  p.push(line(BX + BW, 472, BX + BW, 492, { stroke: '#888' }));
+  p.push(text(BX + BW / 2, 504, '45.5 mm（实测）', { size: 12, anchor: 'middle', fill: '#666' }));
 
-  p.push(line(1204, 140, 1204, 470, { stroke: '#888', sw: 1 }));
-  p.push(line(1194, 140, 1214, 140, { stroke: '#888' }));
-  p.push(line(1194, 470, 1214, 470, { stroke: '#888' }));
-  p.push(text(1220, 312, '约 18 mm', { size: 11.5, fill: '#666', rot: 90 }));
+  p.push(line(1080, BY, 1080, BY + BH, { stroke: '#888', sw: 1 }));
+  p.push(line(1070, BY, 1090, BY, { stroke: '#888' }));
+  p.push(line(1070, BY + BH, 1090, BY + BH, { stroke: '#888' }));
+  p.push(text(1102, BY + BH / 2, '13 mm', { size: 12, fill: '#666', rot: 90 }));
+
+  // 比例尺（20 px = 1 mm）
+  for (let i = 0; i <= 10; i += 1) {
+    p.push(line(140 + i * 20, 524, 140 + i * 20, 534, { stroke: '#888' }));
+  }
+  p.push(line(140, 529, 340, 529, { stroke: '#444', sw: 1 }));
+  p.push(text(140, 552, '0', { size: 10, anchor: 'middle', mono: true, fill: '#666' }));
+  p.push(text(240, 552, '5', { size: 10, anchor: 'middle', mono: true, fill: '#666' }));
+  p.push(text(340, 552, '10 mm', { size: 10, anchor: 'middle', mono: true, fill: '#666' }));
 
   // 说明
   const notes = [
-    '器件面为正面，屏经 8 脚 0.5 mm FPC 直贴主板，未见背光升压电路。',
-    '背光由 5 V 经 R1 = 5.1 Ω 限流直驱，无开关管，因此无法调光。',
-    'TP1 为板边覆铜焊盘，原理图网络名为 Touch1，固件按 ADC 通道 9 采样。',
-    'JP1 / JP2 / JP3 只有焊盘，未焊排针；ISP 短接盘位于 USB_D+ 与 3.3 V 之间。',
+    '板厚与 USB 插头的加厚方式未实测：USB-A 插头要求厚约 2.0 mm，本板若仅 1.6 mm 需加垫片。',
+    '前端触点直接做在板边铜箔上，无连接器；触点区至插入端约 12 mm，属 USB-A 规范的插合长度。',
+    '屏模组外形按市售 0.96 英寸 160×80 模组（约 24 × 13.5 mm）推算，比板宽略大，实物需核对。',
+    'U1 / U2 / U3、三组排针焊盘与触摸电极的板面位置未测绘；连线关系见 docs/PINOUT.md 与 netlist.csv。',
   ];
-  p.push(text(60, 556, '说明', { size: 13, weight: '600' }));
-  p.push(text(60, 580, notes.map((n, i) => `${i + 1}. ${n}`).join('\n'), { size: 12, fill: '#4a4438', lh: 22 }));
+  p.push(text(48, 570, '说明', { size: 13, weight: '600' }));
+  p.push(text(48, 594, notes.map((n, i) => `${i + 1}. ${n}`).join('\n'), { size: 12, fill: '#4a4438', lh: 21 }));
 
   return figure(W, H, p);
 }
-
 // ---------------------------------------------------------------- 连接器脚位
 function connectors() {
   const p = [];
