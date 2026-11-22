@@ -9,7 +9,7 @@ MSU2_MINI 可编程 USB 屏幕模块的**硬件资料与接口规范**。
 - **BOM 与选型说明**：见 [BOM.csv](BOM.csv)
 - 本仓库**不含**原厂原理图 / PCB 源文件——这些从未公开，请勿向本项目索取
 
-固件侧的反编译结果、分析方法与完整分析报告在另一个仓库：`MSU2_MINI_FW_Reverse`。
+固件侧的反编译结果、分析方法与完整分析报告在另一个仓库：[MSU2_MINI_FW_Reverse](https://github.com/hsushjk/MSU2_MINI_FW_Reverse)。
 
 ![PCB](docs/images/pcb.jpg)
 
