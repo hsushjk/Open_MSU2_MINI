@@ -167,69 +167,98 @@ function blockDiagram() {
   return figure(W, H, p);
 }
 
-// ---------------------------------------------------------------- 外形与尺寸
+// ---------------------------------------------------------------- 正反两面
 function boardSketch() {
   const p = [];
-  const W = 1240, H = 700;
+  const W = 1240, H = 1000;
 
-  // 20 px = 1 mm
-  const BX = 140, BY = 200, BW = 910, BH = 260;   // 45.5 x 13 mm
+  const BX = 150, BW = 910, BH = 260;      // 20 px = 1 mm，45.5 x 13 mm
+  const FY = 150;                          // 正面
+  const BY = 560;                          // 背面
 
-  p.push(text(48, 46, 'MSU2_MINI 外形与尺寸', { size: 24, weight: '600' }));
-  p.push(text(48, 74, '长度 45.5 mm、宽度 13 mm 为用户实测；触点区按 USB-A 规范、屏按可视比例绘制', { size: 13, fill: '#555' }));
+  p.push(text(48, 46, 'MSU2_MINI 正反两面', { size: 24, weight: '600' }));
+  p.push(text(48, 74, '板长 45.5 mm、板宽 13 mm、板厚 2.0 mm（用户实测）；比例为 1:1，即 20 px = 1 mm', { size: 13, fill: '#555' }));
 
-  // 板轮廓
+  // ---------------- 正面
+  p.push(text(48, 122, '正面（贴屏面）：从左到右依次是 USB 触点、屏、触摸电极', { size: 15, weight: '600' }));
+  p.push(rect(BX, FY, BW, BH, { fill: '#f4f1e6', stroke: '#5a5346', sw: 1.8, rx: 8 }));
+
+  // USB 触点
+  const padYs = [202, 242, 282, 322];
+  padYs.forEach((y) => p.push(rect(200, y, 120, 16, { fill: '#d9b45a', stroke: '#8a6d24', rx: 2 })));
+  p.push(text(200, FY - 8, 'USB-A 触点 ×4（板边铜箔，6 mm 长，2 mm 间距）', { size: 11.5, fill: '#8a6d24' }));
+
+  // 屏可视区
+  p.push(rect(470, FY + 21, 434, 218, { fill: '#ffffff', stroke: '#3a6ba8', dash: '8 5', sw: 1.6 }));
+  p.push(text(687, FY + 118, '屏 160 × 80', { size: 14, anchor: 'middle', fill: '#3a6ba8' }));
+  p.push(text(687, FY + 144, '可视区约 21.7 × 10.9 mm', { size: 11.5, anchor: 'middle', fill: '#3a6ba8' }));
+
+  // 触摸电极
+  p.push(rect(942, FY, 118, BH, { fill: '#f6dfc8', stroke: '#b07b3c', sw: 1.2, rx: 4 }));
+  p.push(text(1001, FY + 118, '触摸电极', { size: 12, anchor: 'middle', fill: '#8a5a24' }));
+  p.push(text(1001, FY + 140, '13 × 5.9 mm', { size: 11, anchor: 'middle', fill: '#8a5a24' }));
+
+  // 正面尺寸
+  p.push(line(BX, FY + BH + 30, BX + BW, FY + BH + 30, { stroke: '#888' }));
+  p.push(line(BX, FY + BH + 22, BX, FY + BH + 38, { stroke: '#888' }));
+  p.push(line(BX + BW, FY + BH + 22, BX + BW, FY + BH + 38, { stroke: '#888' }));
+  p.push(text(BX + BW / 2, FY + BH + 52, '45.5 mm', { size: 12, anchor: 'middle', fill: '#666' }));
+
+  // ---------------- 背面
+  p.push(text(48, 522, '背面（贴装面，厂商渲染图即此面）：主控、flash、电源、排针焊盘与屏座', { size: 15, weight: '600' }));
   p.push(rect(BX, BY, BW, BH, { fill: '#f4f1e6', stroke: '#5a5346', sw: 1.8, rx: 8 }));
 
-  // 屏模组（推算尺寸，略宽于板，画在板之上以便看出外扩）
-  p.push(rect(420, 195, 480, 270, { fill: 'none', stroke: '#9dbadd', dash: '6 5', sw: 1.2, rx: 3 }));
-  p.push(text(902, 188, '屏模组外形（推算，未实测）', { size: 10.5, anchor: 'end', fill: '#7d97b8' }));
+  // 穿线孔
+  p.push(rect(560, BY + 50, 34, 140, { fill: '#ffffff', stroke: '#5a5346', sw: 1.4, rx: 3 }));
+  p.push(text(578, BY + 210, '穿线孔 1.7 × 7', { size: 11, anchor: 'middle', fill: '#5a5346' }));
 
-  // 可视区
-  p.push(rect(443, 221, 434, 218, { fill: '#ffffff', stroke: '#3a6ba8', dash: '8 5', sw: 1.6 }));
-  p.push(text(660, 322, '可视区 160 × 80', { size: 14, anchor: 'middle', fill: '#3a6ba8' }));
-  p.push(text(660, 348, '约 21.7 × 10.9 mm', { size: 12, anchor: 'middle', fill: '#3a6ba8' }));
+  // J1 屏座
+  p.push(rect(470, BY + 60, 26, 86, { fill: '#cfd8e6', stroke: '#3a6ba8', rx: 2 }));
+  p.push(text(462, BY + 52, 'J1 屏座', { size: 11, anchor: 'end', fill: '#3a6ba8' }));
 
-  // USB-A 触点区
-  p.push(rect(150, 238, 150, 166, { fill: 'none', stroke: '#8a6d24', dash: '5 4', sw: 1.2, rx: 3 }));
-  const pins = [['252', 'VBUS', '5 V'], ['292', 'D−', 'PC16'], ['332', 'D+', 'PC17'], ['372', 'GND', '公共地']];
-  pins.forEach(([y, net, pin]) => {
-    const yy = Number(y);
-    p.push(rect(162, yy, 120, 18, { fill: '#d9b45a', stroke: '#8a6d24', rx: 2 }));
-    p.push(text(304, yy + 14, net, { size: 12, mono: true }));
-    p.push(text(354, yy + 14, pin, { size: 11.5, fill: '#666' }));
-  });
-  p.push(text(150, 232, 'USB-A 触点区', { size: 11.5, fill: '#8a6d24' }));
+  // U1
+  p.push(rect(640, BY + 70, 80, 80, { fill: '#2b2b2b', stroke: '#111', rx: 3 }));
+  p.push(text(680, BY + 118, 'U1', { size: 12, anchor: 'middle', fill: '#f0f0f0' }));
 
-  // 尺寸标注
-  p.push(line(BX, 482, BX + BW, 482, { stroke: '#888', sw: 1 }));
-  p.push(line(BX, 472, BX, 492, { stroke: '#888' }));
-  p.push(line(BX + BW, 472, BX + BW, 492, { stroke: '#888' }));
-  p.push(text(BX + BW / 2, 504, '45.5 mm（实测）', { size: 12, anchor: 'middle', fill: '#666' }));
+  // U2
+  p.push(rect(770, BY + 50, 78, 98, { fill: '#3a3a3a', stroke: '#111', rx: 2 }));
+  p.push(text(809, BY + 104, 'U2', { size: 12, anchor: 'middle', fill: '#f0f0f0' }));
+  p.push(text(809, BY + 132, 'P25D80H', { size: 10.5, anchor: 'middle', fill: '#d8d8d8' }));
 
-  p.push(line(1080, BY, 1080, BY + BH, { stroke: '#888', sw: 1 }));
-  p.push(line(1070, BY, 1090, BY, { stroke: '#888' }));
-  p.push(line(1070, BY + BH, 1090, BY + BH, { stroke: '#888' }));
-  p.push(text(1102, BY + BH / 2, '13 mm', { size: 12, fill: '#666', rot: 90 }));
+  // C1 / C2 / R1
+  p.push(rect(628, BY + 180, 34, 16, { fill: '#c8a24a', stroke: '#8a6d24', rx: 2 }));
+  p.push(text(645, BY + 214, 'C1', { size: 10.5, anchor: 'middle' }));
+  p.push(rect(676, BY + 180, 34, 16, { fill: '#c8a24a', stroke: '#8a6d24', rx: 2 }));
+  p.push(text(693, BY + 214, 'C2', { size: 10.5, anchor: 'middle' }));
+  p.push(rect(500, BY + 24, 32, 14, { fill: '#3a3a3a', stroke: '#111', rx: 2 }));
+  p.push(text(516, BY + 16, 'R1', { size: 10.5, anchor: 'middle' }));
 
-  // 比例尺（20 px = 1 mm）
-  for (let i = 0; i <= 10; i += 1) {
-    p.push(line(140 + i * 20, 524, 140 + i * 20, 534, { stroke: '#888' }));
+  // 排针焊盘
+  for (let i = 0; i < 5; i += 1) {
+    p.push(`<circle cx="${700 + i * 40}" cy="${BY + 16}" r="9" fill="#cfd8e6" stroke="#3a6ba8"/>`);
+    p.push(`<circle cx="${700 + i * 40}" cy="${BY + 244}" r="9" fill="#cfd8e6" stroke="#3a6ba8"/>`);
   }
-  p.push(line(140, 529, 340, 529, { stroke: '#444', sw: 1 }));
-  p.push(text(140, 552, '0', { size: 10, anchor: 'middle', mono: true, fill: '#666' }));
-  p.push(text(240, 552, '5', { size: 10, anchor: 'middle', mono: true, fill: '#666' }));
-  p.push(text(340, 552, '10 mm', { size: 10, anchor: 'middle', mono: true, fill: '#666' }));
+  p.push(text(888, BY + 22, 'JP3', { size: 11, fill: '#3a6ba8' }));
+  p.push(text(888, BY + 248, 'JP2', { size: 11, fill: '#3a6ba8' }));
+
+  // JP1
+  p.push(rect(960, BY + 60, 40, 22, { fill: '#cfd8e6', stroke: '#3a6ba8', rx: 2 }));
+  p.push(rect(960, BY + 178, 40, 22, { fill: '#cfd8e6', stroke: '#3a6ba8', rx: 2 }));
+  p.push(text(1032, BY + 76, 'JP1', { size: 11, fill: '#3a6ba8' }));
+
+  // FPC 走线
+  p.push(line(556, BY + 130, 500, BY + 130, { stroke: '#c0398a', sw: 2.4, dash: '7 4' }));
 
   // 说明
   const notes = [
-    '板厚与 USB 插头的加厚方式未实测：USB-A 插头要求厚约 2.0 mm，本板若仅 1.6 mm 需加垫片。',
-    '前端触点直接做在板边铜箔上，无连接器；触点区至插入端约 12 mm，属 USB-A 规范的插合长度。',
-    '屏模组外形按市售 0.96 英寸 160×80 模组（约 24 × 13.5 mm）推算，比板宽略大，实物需核对。',
-    'U1 / U2 / U3、三组排针焊盘与触摸电极的板面位置未测绘；连线关系见 docs/PINOUT.md 与 netlist.csv。',
+    '板厚 2.0 mm 由用户实测，因此 USB-A 插头直接以 PCB 板边成型，无需垫片。',
+    '正面只有三样东西：USB 触点、屏、触摸电极；其余器件全在背面。',
+    '触摸电极是 PCB 的一部分，尺寸 13 × 5.9 mm，覆盖板宽，位置在最外端。',
+    '穿线孔 1.7 × 7 mm 位于板中部、flash 左侧，屏 FPC 由此穿过到背面屏座。',
+    '背面各器件的相对位置按厂商渲染图与描述复原，未逐点测绘，可作参考不作依据。',
   ];
-  p.push(text(48, 570, '说明', { size: 13, weight: '600' }));
-  p.push(text(48, 594, notes.map((n, i) => `${i + 1}. ${n}`).join('\n'), { size: 12, fill: '#4a4438', lh: 21 }));
+  p.push(text(48, 856, '说明', { size: 13, weight: '600' }));
+  p.push(text(48, 880, notes.map((n, i) => `${i + 1}. ${n}`).join('\n'), { size: 12, fill: '#4a4438', lh: 21 }));
 
   return figure(W, H, p);
 }
@@ -301,7 +330,7 @@ function connectors() {
 if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
 const targets = [
   ['system-block.svg', blockDiagram()],
-  ['board-sketch.svg', boardSketch()],
+  ['board-views.svg', boardSketch()],
   ['connectors.svg', connectors()],
 ];
 for (const [name, body] of targets) {

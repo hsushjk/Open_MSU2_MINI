@@ -2,13 +2,13 @@
 
 MSU2_MINI 可编程 USB 屏幕模块的硬件资料与通信协议整理。
 
-模块丝印为 `Moriateliers`、`MN: MSU2M-24Q3`、`RISC-V-48MHz`，形态是一个贴片 USB 棒，正面装 0.96 英寸 160×80 彩色屏，侧面有触摸焊盘与三组排针焊盘。原厂没有公开原理图或 PCB 源文件，因此本仓库的连线表由实物照片、PCB 走线与固件外设配置序列交叉反推得到，协议部分由固件实现与官方上位机双向对照整理。
+模块丝印为 `Moriateliers`、`MN: MSU2M-24Q3`、`RISC-V-48MHz`，形态是一个贴片 USB 棒：板边直接做成 USB-A 插头，正面只有 USB 触点、0.96 英寸 160×80 屏和最外端的触摸电极，主控与外设全在背面。原厂没有公开原理图或 PCB 源文件，因此本仓库的连线表由实物照片、PCB 走线与固件外设配置序列交叉反推得到，协议部分由固件实现与官方上位机双向对照整理。
 
 固件本身的反编译结果与缺陷分析在另一个仓库：[MSU2_MINI_FW_Reverse](https://github.com/hsushjk/MSU2_MINI_FW_Reverse)。
 
 ![系统框图](docs/images/system-block.svg)
 
-上面三张图（[系统框图](docs/images/system-block.svg)、[外形与尺寸](docs/images/board-sketch.svg)、[连接器脚位](docs/images/connectors.svg)）都是本仓库按 netlist.csv 与实测尺寸重绘的矢量图，不含厂商图片或原理图素材；生成脚本为 [tools/gen_figures.js](tools/gen_figures.js)，改图只需改脚本中的坐标与文字后重跑。
+上面三张图（[系统框图](docs/images/system-block.svg)、[正反两面](docs/images/board-views.svg)、[连接器脚位](docs/images/connectors.svg)）都是本仓库按 netlist.csv 与实测尺寸重绘的矢量图，不含厂商图片或原理图素材；生成脚本为 [tools/gen_figures.js](tools/gen_figures.js)，改图只需改脚本中的坐标与文字后重跑。
 
 ## 仓库内容
 
@@ -16,7 +16,7 @@ MSU2_MINI 可编程 USB 屏幕模块的硬件资料与通信协议整理。
 docs/PINOUT.md       QFN-20 逐脚连线表、复用冲突、时钟与总线、连接器与器件
 docs/PROTOCOL.md     与官方固件 V1.1 对应的 6 字节帧协议规范
 docs/FLASHING.md     烧录方法（USB ISP，无需专用调试口）
-docs/images/         自绘插图（系统框图、外形与尺寸、连接器脚位）
+docs/images/         自绘插图（系统框图、正反两面、连接器脚位）
 tools/gen_figures.js 插图生成脚本
 netlist.csv          器件、脚位、网络、方向的机器可读网表
 BOM.csv              物料清单
@@ -35,8 +35,8 @@ TODO.md              尚未实测或缺少源文件的条目
 | 背光 | 5 V 经 R1（5.1 Ω）直连，无开关管、无调光 |
 | 供电 | USB 5 V 经 XC6206P33 降至 3.3 V |
 | USB | A 型插头直插，复合设备（CDC-ACM 加 HID） |
-| 交互 | 单个电容触摸电极，无按键、无复位键 |
-| 尺寸 | 45.5 × 13 mm（用户实测）；板厚与 USB 插头加厚方式待测 |
+| 交互 | 单个电容触摸电极（13 × 5.9 mm，由 PCB 铜箔构成），无按键、无复位键 |
+| 尺寸 | 45.5 × 13 × 2.0 mm（用户实测） |
 
 屏与 flash 共用 SPI1：屏走 PC3 片选，flash 走 PB7 片选。理解这块板子的关键就是这条总线和两个片选。
 
