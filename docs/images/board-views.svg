@@ -14,8 +14,9 @@
 <text x="687" y="268" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="14" fill="#3a6ba8" font-weight="400" text-anchor="middle" opacity="1"><tspan x="687" dy="0">屏 160 × 80</tspan></text>
 <text x="687" y="294" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11.5" fill="#3a6ba8" font-weight="400" text-anchor="middle" opacity="1"><tspan x="687" dy="0">可视区约 21.7 × 10.9 mm</tspan></text>
 <rect x="942" y="150" width="118" height="260" rx="4" fill="#f6dfc8" stroke="#b07b3c" stroke-width="1.2"/>
-<text x="1001" y="268" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="12" fill="#8a5a24" font-weight="400" text-anchor="middle" opacity="1"><tspan x="1001" dy="0">触摸电极</tspan></text>
-<text x="1001" y="290" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" fill="#8a5a24" font-weight="400" text-anchor="middle" opacity="1"><tspan x="1001" dy="0">13 × 5.9 mm</tspan></text>
+<text x="1001" y="184" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="12" fill="#8a5a24" font-weight="400" text-anchor="middle" opacity="1"><tspan x="1001" dy="0">触摸电极</tspan></text>
+<text x="1001" y="204" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" fill="#8a5a24" font-weight="400" text-anchor="middle" opacity="1"><tspan x="1001" dy="0">13 × 5.9 mm</tspan></text>
+<circle cx="1001" cy="280" r="16" fill="#f4f1e6" stroke="#5a5346" stroke-width="1.4"/>
 <line x1="150" y1="440" x2="1060" y2="440" stroke="#888" stroke-width="1.4"/>
 <line x1="150" y1="432" x2="150" y2="448" stroke="#888" stroke-width="1.4"/>
 <line x1="1060" y1="432" x2="1060" y2="448" stroke="#888" stroke-width="1.4"/>
@@ -52,7 +53,8 @@
 <rect x="960" y="620" width="40" height="22" rx="2" fill="#cfd8e6" stroke="#3a6ba8" stroke-width="1.4"/>
 <rect x="960" y="738" width="40" height="22" rx="2" fill="#cfd8e6" stroke="#3a6ba8" stroke-width="1.4"/>
 <text x="1032" y="636" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" fill="#3a6ba8" font-weight="400" text-anchor="start" opacity="1"><tspan x="1032" dy="0">JP1</tspan></text>
+<circle cx="1001" cy="690" r="16" fill="#f4f1e6" stroke="#5a5346" stroke-width="1.4"/>
 <line x1="556" y1="690" x2="500" y2="690" stroke="#c0398a" stroke-width="2.4" stroke-dasharray="7 4"/>
 <text x="48" y="856" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="13" fill="#1b1b1b" font-weight="600" text-anchor="start" opacity="1"><tspan x="48" dy="0">说明</tspan></text>
-<text x="48" y="880" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="12" fill="#4a4438" font-weight="400" text-anchor="start" opacity="1"><tspan x="48" dy="0">1. 板厚 2.0 mm 由用户实测，因此 USB-A 插头直接以 PCB 板边成型，无需垫片。</tspan><tspan x="48" dy="21">2. 正面只有三样东西：USB 触点、屏、触摸电极；其余器件全在背面。</tspan><tspan x="48" dy="21">3. 触摸电极是 PCB 的一部分，尺寸 13 × 5.9 mm，覆盖板宽，位置在最外端。</tspan><tspan x="48" dy="21">4. 穿线孔 1.7 × 7 mm 位于板中部、flash 左侧，屏 FPC 由此穿过到背面屏座。</tspan><tspan x="48" dy="21">5. 背面各器件的相对位置按厂商渲染图与描述复原，未逐点测绘，可作参考不作依据。</tspan></text>
+<text x="48" y="880" font-family="'Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="12" fill="#4a4438" font-weight="400" text-anchor="start" opacity="1"><tspan x="48" dy="0">1. 板厚 2.0 mm 由用户实测，因此 USB-A 插头直接以 PCB 板边成型，无需垫片。</tspan><tspan x="48" dy="21">2. 正面只有三样东西：USB 触点、屏、触摸电极；其余器件全在背面。</tspan><tspan x="48" dy="21">3. 触摸电极是 PCB 的一部分，尺寸 13 × 5.9 mm，覆盖板宽，位置在最外端；电极是阻焊层下的网格铜箔，表面无开窗。</tspan><tspan x="48" dy="21">4. 穿线孔 1.7 × 7 mm 位于板中部、flash 左侧，屏 FPC 由此穿过到背面屏座。</tspan><tspan x="48" dy="21">5. 触摸端居中另有一个穿透板面的圆孔，直径未测（照片中可见，正反两面在同一位置）。</tspan><tspan x="48" dy="21">6. 背面各器件的相对位置按厂商渲染图与描述复原，未逐点测绘，可作参考不作依据。</tspan></text>
 </svg>

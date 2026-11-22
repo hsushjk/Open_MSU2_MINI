@@ -195,8 +195,9 @@ function boardSketch() {
 
   // 触摸电极
   p.push(rect(942, FY, 118, BH, { fill: '#f6dfc8', stroke: '#b07b3c', sw: 1.2, rx: 4 }));
-  p.push(text(1001, FY + 118, '触摸电极', { size: 12, anchor: 'middle', fill: '#8a5a24' }));
-  p.push(text(1001, FY + 140, '13 × 5.9 mm', { size: 11, anchor: 'middle', fill: '#8a5a24' }));
+  p.push(text(1001, FY + 34, '触摸电极', { size: 12, anchor: 'middle', fill: '#8a5a24' }));
+  p.push(text(1001, FY + 54, '13 × 5.9 mm', { size: 11, anchor: 'middle', fill: '#8a5a24' }));
+  p.push(`<circle cx="1001" cy="${FY + 130}" r="16" fill="#f4f1e6" stroke="#5a5346" stroke-width="1.4"/>`);
 
   // 正面尺寸
   p.push(line(BX, FY + BH + 30, BX + BW, FY + BH + 30, { stroke: '#888' }));
@@ -247,14 +248,16 @@ function boardSketch() {
   p.push(text(1032, BY + 76, 'JP1', { size: 11, fill: '#3a6ba8' }));
 
   // FPC 走线
+  p.push(`<circle cx="1001" cy="${BY + 130}" r="16" fill="#f4f1e6" stroke="#5a5346" stroke-width="1.4"/>`);
   p.push(line(556, BY + 130, 500, BY + 130, { stroke: '#c0398a', sw: 2.4, dash: '7 4' }));
 
   // 说明
   const notes = [
     '板厚 2.0 mm 由用户实测，因此 USB-A 插头直接以 PCB 板边成型，无需垫片。',
     '正面只有三样东西：USB 触点、屏、触摸电极；其余器件全在背面。',
-    '触摸电极是 PCB 的一部分，尺寸 13 × 5.9 mm，覆盖板宽，位置在最外端。',
+    '触摸电极是 PCB 的一部分，尺寸 13 × 5.9 mm，覆盖板宽，位置在最外端；电极是阻焊层下的网格铜箔，表面无开窗。',
     '穿线孔 1.7 × 7 mm 位于板中部、flash 左侧，屏 FPC 由此穿过到背面屏座。',
+    '触摸端居中另有一个穿透板面的圆孔，直径未测（照片中可见，正反两面在同一位置）。',
     '背面各器件的相对位置按厂商渲染图与描述复原，未逐点测绘，可作参考不作依据。',
   ];
   p.push(text(48, 856, '说明', { size: 13, weight: '600' }));
