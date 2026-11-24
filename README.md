@@ -1,84 +1,80 @@
-﻿# Open_MSU2_MINI
+# Open_MSU2_MINI
 
-MSU2_MINI 可编程 USB 屏幕模块的硬件资料与通信协议整理。
+MSU2_MINI（丝印 `Moriateliers` / `MN: MSU2M-24Q3`）的硬件资料与协议文档：一块 45.5×13×2.0 mm、板边直接做 USB-A 插头的 RISC-V 小副屏，CH32X033F8P6 + P25D80H + ST7735S 160×80 + 单电极触摸，无按键、无复位键、无调试口。
 
-模块丝印为 `Moriateliers`、`MN: MSU2M-24Q3`、`RISC-V-48MHz`，形态是一个贴片 USB 棒：板边直接做成 USB-A 插头，正面只有 USB 触点、0.96 英寸 160×80 屏和最外端的触摸电极，主控与外设全在背面、位于屏的正后方。原厂没有公开原理图或 PCB 源文件，因此本仓库的连线表由实物照片、PCB 走线与固件外设配置序列交叉反推得到，协议部分由固件实现与官方上位机双向对照整理。
+## 关键特性
 
-固件本身的反编译结果与缺陷分析在另一个仓库：[MSU2_MINI_FW_Reverse](https://github.com/hsushjk/MSU2_MINI_FW_Reverse)。
-
-![系统框图](docs/images/system-block.svg)
-
-上面三张图（[系统框图](docs/images/system-block.svg)、[正反两面](docs/images/board-views.svg)、[连接器脚位](docs/images/connectors.svg)）都是本仓库按 netlist.csv 与实测尺寸重绘的矢量图，不含厂商图片或原理图素材；生成脚本为 [tools/gen_figures.js](tools/gen_figures.js)，改图只需改脚本中的坐标与文字后重跑。
+- **板边即插头**：4 根 USB 金手指直接做在板边铜箔上，插进 USB-A 口就能用，不用线。
+- **单芯片带屏带存储**：CH32X033F8P6（RV32IMAC 48 MHz、62 KB flash、20 KB RAM）+ 1 MB SPI NOR + 160×80 RGB565 屏。
+- **单电极触摸**：13×5.9 mm 网格铜箔压在阻焊层下，走 ADC 通道 9 的 TKey 采样。
+- **无调试口也能救**：短接 `USB_D+` 与 `3.3V` 两个焊盘上电即进 ROM ISP。
+- **资料自洽**：引脚表、网表、BOM、原理图画法脚本、刷写说明、完整协议表都在本仓库。
 
 ## 仓库内容
 
-```
-docs/PINOUT.md       QFN-20 逐脚连线表、复用冲突、时钟与总线、连接器与器件
-docs/PROTOCOL.md     与官方固件 V1.1 对应的 6 字节帧协议规范
-docs/FLASHING.md     烧录方法（USB ISP，无需专用调试口）
-docs/images/         自绘插图（系统框图、正反两面、连接器脚位）
-tools/gen_figures.js 插图生成脚本
-netlist.csv          器件、脚位、网络、方向的机器可读网表
-BOM.csv              物料清单
-TODO.md              尚未实测或缺少源文件的条目
-```
+| 路径 | 内容 |
+| --- | --- |
+| [`docs/PINOUT.md`](docs/PINOUT.md) | 20 脚全表、连接器、时钟总线、复用冲突、机械尺寸 |
+| [`docs/PROTOCOL.md`](docs/PROTOCOL.md) | 原厂 V1.1 协议（实测整理）+ 自研固件 v1.0.0 协议全表 |
+| [`docs/FLASHING.md`](docs/FLASHING.md) | USB ROM ISP 刷写与救砖焊盘操作 |
+| `docs/images/system-block.svg` | 系统框图（主控 / NOR / 屏 / 触摸 / 电源） |
+| `docs/images/board-views.svg` | 正反面元件布局与丝印 |
+| `docs/images/connectors.svg` | J1 / JP1 / JP2 / JP3 / U2 引脚朝向 |
+| `netlist.csv` | 网表（元件-脚位-网络名） |
+| `BOM.csv` | 物料清单 |
+| `tools/gen_figures.js` | 生成上面三张 SVG 的脚本（改尺寸/位号后重跑） |
+| `TODO.md` | 已知待办与复刻反馈 |
+
+三张 SVG 与网表都是脚本/表格生成的，改数据再跑脚本即可，不用手改图。
 
 ## 硬件概况
 
-| 项目 | 规格 |
-|---|---|
-| 主控 | CH32X033F8P6，QFN-20，RISC-V 青稞内核，48 MHz |
-| 程序存储 | 片内 64 KB flash，官方固件占用 24 224 B |
-| 内存 | 20 KB SRAM |
-| 外部存储 | P25D80H，1 MB SPI NOR，SOP-8 |
-| 显示屏 | 0.96 英寸 160×80，ST7735S，8 脚 0.5 mm FPC |
-| 背光 | 5 V 经 R1（5.1 Ω）直连，无开关管、无调光 |
-| 供电 | USB 5 V 经 XC6206P33 降至 3.3 V |
-| USB | A 型插头直插，复合设备（CDC-ACM 加 HID） |
-| 交互 | 单个电容触摸电极（13 × 5.9 mm，阻焊层下的网格铜箔，表面无开窗），无按键、无复位键 |
-| 尺寸 | 45.5 × 13 × 2.0 mm（卡尺实测）；触摸端另有一个穿透板面的圆孔 |
+| 部件 | 型号 | 说明 |
+| --- | --- | --- |
+| 主控 | CH32X033F8P6（QFN-20） | 18 IO + VDD + VSS；内部 HSI 48 MHz，无 PLL 无晶振；64 KB flash（原厂固件占 24 224 B）、20 KB SRAM |
+| 存储 | P25D80H（SOP-8） | 1 MB SPI NOR，/WP 与 /HOLD 均接死 3.3 V |
+| 屏 | ST7735S 0.96" | 160×80，8 脚 0.5 mm FPC，RASET 有 24 行偏移，SPI 模式 3 |
+| 电源 | XC6206P33（SOT-23） | 5 V → 3.3 V；背光 5 V 经 R1 5.1 Ω 直连 |
+| 触摸 | 单电极 TP1 | 13×5.9 mm 网格铜箔，位于阻焊层下，无开窗 |
+| 连接器 | J1 8P FPC / JP1 4P / JP2 6P / JP3 6P | 排针未焊接，见下 |
 
-屏与 flash 共用 SPI1：屏走 PC3 片选，flash 走 PB7 片选。理解这块板子的关键就是这条总线和两个片选。
+| 机械项 | 值 |
+| --- | --- |
+| 板长×宽×厚 | 45.5 × 13 × 2.0 mm（±0.2） |
+| USB 触点 | 4 根，中心距 2.0 mm，长约 6 mm，外侧两根加宽 |
+| 触点区到穿线孔 | 9.0 mm；穿线孔径 1.7 × 7.0 mm |
+| 排针焊盘 | 间距 2.5 mm，每列 6 个（1 方 + 5 圆），圆心到板边 1.1 mm |
+| 触摸电极 | 6.0 × 13.0 mm，距板端 1.0 mm，覆盖全宽 |
 
-## 引脚摘要
-
-完整表格见 [docs/PINOUT.md](docs/PINOUT.md)，网表见 [netlist.csv](netlist.csv)。
-
-| 脚 | 网络 | 功能 |
-|---|---|---|
-| PA6 | SPI_MISO | flash 数据输出，兼作屏 D/C（一脚两用） |
-| PA7 | SPI_MOSI | 屏与 flash 共用 |
-| PA5 | SPI_SCLK | 屏与 flash 共用，固件按 24 MHz、模式 3 驱动 |
-| PB7 | SPI_CS_Flash | flash 片选（低有效） |
-| PC3 | SPI_CS_LCD | 屏片选（低有效） |
-| PA0 | LCD_RST | 屏复位 |
-| PC16 / PC17 | USB D− / D+ | D+ 另有 ISP 短接焊盘 |
-| PB1 | TOUCH1 | 触摸电极，固件以 ADC 通道 9 采样 |
-| PC18 / PC19 | I2C_DIO / I2C_CLK | 与 SWDIO / SWCLK 复用，引到 JP1 |
-| PA2 / PA3 | TX2 / RX2 | USART2，固件只发送 |
-| PA10 / PA11 | TX1 / RX1 | USART1，固件未使用 |
-| PA4 / PA1 | SPI_CS1 / SPI_CS2 | 引到排针，固件未使用 |
-| PA9 | — | 板上无负载，固件仍每次刷屏翻转 28 次 |
+**JP1 / JP2 / JP3 未焊接，暂不支持**：它们与屏共用 SPI，且 JP1 的 I2C 与 SWD 复用，接上就换走了调试口。
 
 ## 已知设计问题
 
-1. PA6 一脚两用。片选都拉高、总线空闲时，PA6 仍被 MCU 当作推挽输出驱动到 D/C 电平，外挂的 SPI 从机会被顶住数据线。因此板上两组 SPI 排针实际只有写通路。
-2. 背光不可调。R1 直接串在 5 V 与背光之间，没有开关管，无法调光或关屏；R1 仅 5.1 Ω，首次上电建议先串电流表。
-3. I2C 与调试口复用。PC18/PC19 就是 SWDIO/SWCLK，接了 I2C 外设就没有调试口。
-4. 没有复位键与 BOOT 键。进入 USB ISP 需要在上电瞬间短接 ISP 焊盘，具体操作见 [docs/FLASHING.md](docs/FLASHING.md)。
-5. 丝印不带引脚名。板上只有 `J1`、`JP1`、`JP2`、`JP3`，引脚功能需对照本仓库的表格。
-6. flash 的 `/WP` 与 `/HOLD` 均接死 3.3 V，写保护实际不起作用（对本用途无影响）。
+| # | 问题 | 影响 |
+| --- | --- | --- |
+| 1 | PA6 一脚两用（NOR MISO = 屏 D/C） | 排针 SPI 只有写通路；屏刷新与 NOR 访问必须严格串行 |
+| 2 | 背光 5 V 直连，R1 仅 5.1 Ω 限流 | 亮度不可调，无处关机 |
+| 3 | PC18 / PC19 的 I2C 与 SWD 复用 | 想接 I2C 外设就得放弃 SWD 调试 |
+| 4 | 无复位键、无 BOOT 键 | 只能上电瞬间短接 `USB_D+`/`3.3V` 进 ISP |
+| 5 | 丝印只有 J1/JP1/JP2/JP3，无引脚名 | 飞线前必须对着 `docs/PINOUT.md` |
+| 6 | NOR 的 /WP 与 /HOLD 接死 3.3 V | 写保护失效，误擦写无硬件拦截 |
 
 ## 复刻要点
 
-- 屏：0.96 英寸 160×80、8 脚 FPC 的 ST7735S 模组市面可得。购买前确认排线是同向还是反向，以及 0.5 mm 的金手指间距，这是复刻最容易出错的一环。
-- FPC 座：8P、0.5 mm、翻盖式，按屏排线厚度选型。
-- LDO：XC6206P332MR（SOT-23），可用 ME6206、HT7333 替代。
-- 背光调光改造：把 R1 换成低边 N-MOSFET，栅极接 PA9（原本的空脚，已引到 JP3 第 2 脚），现有固件不改也能复用该脚。
-- 触摸电极：单焊盘电容触摸，采用网格铜箔以平衡铜厚与平整度，形状与盖板厚度直接影响灵敏度，建议照实物尺寸复刻。
+- **屏排线最容易错**：同向/反向、8 脚 0.5 mm 金手指间距，买屏前先确认 FPC 触点朝上面还是下面。
+- FPC 座用 8P 0.5 mm 翻盖式；LDO 可换 ME6206 / HT7333 同封装替代。
+- 想调背光：把 R1 换成低边 N-MOSFET，栅极接 PA9（已引到 JP3 第 2 脚），固件侧对应 PWM 即可。
+- 触摸电极按实物尺寸（13×5.9 mm 网格铜箔）复刻，形状变了阈值要重标。
+- 屏在板正面、主控与 NOR 在屏正后方的背面，贴装顺序按 `docs/images/board-views.svg`。
+
+## 相关仓库
+
+| 仓库 | 内容 |
+| --- | --- |
+| [`Open_MSU2_MINI_FW`](../Open_MSU2_MINI_FW) | 自研固件 v1.0.0：流式刷屏、NOR 资产、开机/待机、免拆 OTA、自检命令 |
+| [`Open_MSU2_MINI_Console`](../Open_MSU2_MINI_Console) | 上位机 v1.0.0：WebUI、插件、CLI、OTA、自检 |
+| [`MSU2_MINI_FW_Reverse`](../MSU2_MINI_FW_Reverse) | 原厂固件反编译产物与分析报告 |
 
 ## 许可
 
-本仓库的文档、连线表与网表采用 MIT License，见 [LICENSE](LICENSE)。
-
-硬件事实由实物与固件反推，不保证与原厂设计完全一致，按此复刻的风险由使用者承担。`MSU2`、`Moriateliers`、`WCH`、`CH32` 等名称与商标归各自权利人所有，本项目与其无关联、未获授权。MIT 只覆盖版权，不授予任何专利权利。
+硬件资料与文档采用 MIT。原厂固件版权归 WCH / 厂商所有，本仓库不包含原厂固件本体。
