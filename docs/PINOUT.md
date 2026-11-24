@@ -1,31 +1,31 @@
 # MSU2_MINI 引脚表
 
-CH32X033F8P6（QFN-20）共 20 脚：18 个 IO + VDD + VSS。全部引脚名以本表为准——板上丝印只有 `J1` / `JP1` / `JP2` / `JP3`，**没有引脚名**，飞线前务必对照本表。
+CH32X033F8P6（QFN-20）共 20 脚：18 个 IO + VDD + VSS。板上丝印只有 `J1` / `JP1` / `JP2` / `JP3`，**没有引脚名**，飞线前务必对照本表。
 
 ## 1. 主控逐脚
 
-| 脚 | 引脚 | 网络名 | 去向 | 自研固件是否使用 |
+| 脚 | 引脚 | 网络名 | 去向 | 固件 1.0.9 使用 |
 | --- | --- | --- | --- | --- |
-| 1 | PA6 | SPI_MISO / LCD_D/C | U2.DO + J1.4 | ✅ 屏 D/C（输出，NOR 读前切浮空输入） |
-| 2 | PA7 | SPI_MOSI | U2.DI + J1.5 | ✅ |
-| 3 | PB1 | Touch1 | 触摸电极 TP1（模拟输入） | ✅ ADC ch9 |
-| 4 | PB7 | SPI_CS_Flash | U2.CS# | ✅ |
-| 5 | PC16 | USB_DM | USB-A 金手指 | ✅ |
-| 6 | PC17 | USB_DP | USB-A 金手指 + ISP 短接焊盘 | ✅ |
+| 1 | PA6 | SPI_MISO / LCD_D/C | U2.DO + J1.4 | ✅ 屏 D/C 输出；读 NOR 前切浮空输入（`lcd_raw_idle()`） |
+| 2 | PA7 | SPI_MOSI | U2.DI + J1.5 | ✅ SPI1 MOSI |
+| 3 | PB1 | Touch1 | 触摸电极 TP1（模拟输入） | ✅ ADC 通道 9 |
+| 4 | PB7 | SPI_CS_Flash | U2.CS# | ✅ 低有效 |
+| 5 | PC16 | USB_DM | USB-A 金手指 | ✅ USB 全速 |
+| 6 | PC17 | USB_DP | USB-A 金手指 + ISP 短接焊盘 | ✅ USB 全速 |
 | 7 | VDD | 3.3 V | U3 输出 | — |
-| 8 | PC18 | I2C_DIO | JP1.1（与 SWDIO 复用） | ❌ |
+| 8 | PC18 | I2C_DIO | JP1.3（与 SWDIO 复用） | ❌ |
 | 9 | VSS | GND | — | — |
-| 10 | PA9 | 无网络 | 无负载（排针只有 JP3.2 可引） | ⚙️ 随屏 CS 翻转，仅保持时序 |
-| 11 | PA11 | RX1 | JP2.4 | ❌ |
-| 12 | PA10 | TX1 | JP2.3 | ❌ |
-| 13 | PC3 | SPI_CS_LCD | J1.8 | ✅ |
-| 14 | PA0 | LCD_RST | J1.3 | ✅ |
+| 10 | PA9 | 无网络 | 仅 JP3.2，板上无负载 | ⚙️ 随屏 CS 同步翻转，仅保持时序 |
+| 11 | PA11 | RX1 | JP2.5 | ❌ |
+| 12 | PA10 | TX1 | JP2.4 | ❌ |
+| 13 | PC3 | SPI_CS_LCD | J1.8 | ✅ 低有效 |
+| 14 | PA0 | LCD_RST | J1.3 | ✅ 屏复位 |
 | 15 | PA1 | SPI_CS2 | JP2.6 | ❌ |
-| 16 | PA2 | TX2 | JP3.4（USART2 115200 8N1，只发不收） | ✅ 调试输出 |
+| 16 | PA2 | TX2 | JP3.4 | ❌ 未启用 USART2 |
 | 17 | PA3 | RX2 | JP3.5 | ❌ |
-| 18 | PC19 | I2C_CLK | JP1.2（与 SWCLK 复用） | ❌ |
+| 18 | PC19 | I2C_CLK | JP1.4（与 SWCLK 复用） | ❌ |
 | 19 | PA4 | SPI_CS1 | JP3.6 | ❌ |
-| 20 | PA5 | SPI_SCLK | U2.CLK + J1.6 | ✅ |
+| 20 | PA5 | SPI_SCLK | U2.CLK + J1.6 | ✅ SPI1 SCK |
 
 ## 2. 连接器
 
@@ -67,13 +67,13 @@ CH32X033F8P6（QFN-20）共 20 脚：18 个 IO + VDD + VSS。全部引脚名以�
 | 脚 | 信号 |
 | --- | --- |
 | 1 | GND |
-| 2 | PA9（背光调光改造点） |
+| 2 | PA9（板上无负载） |
 | 3 | 3.3 V |
 | 4 | PA2（TX2） |
 | 5 | PA3（RX2） |
 | 6 | PA4（SPI_CS1） |
 
-> **JP1 / JP2 / JP3 全部未焊接，暂不支持使用**：它们挂在屏的 SPI 总线上，且 JP1 的 I2C 与 SWD 复用——插上就换走了调试口。
+> **JP1 / JP2 / JP3 均为空焊盘**：JP1 是 I2C（PC18/PC19，与 SWD 复用）；JP2 / JP3 只引出 UART 与两根未用的片选，没有引出 SPI 的 SCK/MOSI/MISO，不能直接接 SPI 外设。
 
 ## 3. 外设芯片
 
@@ -110,21 +110,23 @@ CH32X033F8P6（QFN-20）共 20 脚：18 个 IO + VDD + VSS。全部引脚名以�
 
 | # | 冲突 | 后果 |
 | --- | --- | --- |
-| 1 | PA6 = NOR DO / 屏 D/C | 排针 SPI 只有写通路，外挂从机的 DO 会顶住屏 D/C；屏刷新与 NOR 访问必须串行 |
+| 1 | PA6 = NOR DO / 屏 D/C | 硬件设计缺陷：读 NOR 前必须让屏空闲（固件 `lcd_raw_idle()`），屏刷新与 NOR 访问只能严格串行；排针也未引出 MISO，无法外挂 SPI 从机 |
 | 2 | PB7 / PC3 同一条 SPI 上两个从机 | 只能软件片选，无硬件 NSS |
 | 3 | PC18 / PC19 = I2C / SWD | 接 I2C 外设即放弃 SWD 调试 |
 | 4 | PB1 只接模拟 | 触摸无法走数字接口，只能 ADC 采样 |
 
-## 5. 时钟与总线
+## 5. 时钟、总线与存储
 
 | 项 | 配置 |
 | --- | --- |
-| 系统时钟 | 内部 HSI 48 MHz，**无 PLL、无外部晶振**；`FLASH_ACTLR` 需 2 个等待周期，否则 48 MHz 下偶发花屏/跑飞 |
-| SPI1 | 主机、8 位、模式 3、软件 NSS、fPCLK/2 = **24 MHz**（ST7735S 手册上限约 15 MHz，实测可用但不保证每片稳定） |
-| USART2 | 115200 8N1，只接 TX（BRR = 0x1A1） |
-| TIM3 | 1 kHz（PSC = 47，ARR = 999），原厂用于会话超时 |
-| ADC | ch9 = 触摸（TKey 注入模式），ch15 = 心跳/参考 |
-| USB | 全速 12 Mbps，内部 USB PHY |
+| 系统时钟 | 内部 HSI 48 MHz，**无 PLL、无外部晶振**；`FLASH_ACTLR` 需 2 个等待周期 |
+| SPI1 | 主机、8 位、模式 3、软件 NSS、fPCLK/2 = **24 MHz**；ST7735S 手册写周期对应上限约 15 MHz，24 MHz 属超规格使用 |
+| USART2 | 固件未启用；PA2 / PA3 仅引到 JP3 |
+| TIM3 | 固件未使用；系统时基为 SysTick（48000 计数 ≈ 1 ms） |
+| ADC | 通道 9 = 触摸（TKey 注入模式，采样 239.5 周期） |
+| USB | 全速 12 Mbps，内部 PHY；VID/PID `1A86:FE0D` |
+| 片内 flash | 标称 64 KB、可用 62 KB；`link.ld` 应用区 60 KB（0x0000–0xEFFF），0xF000 起一页留作内部 flash 体检页；运行映射 0x00000000，编程别名 0x08000000 |
+| 片内 SRAM | 20 KB（0x20000000） |
 
 ## 6. 机械尺寸
 
@@ -135,7 +137,7 @@ CH32X033F8P6（QFN-20）共 20 脚：18 个 IO + VDD + VSS。全部引脚名以�
 | 触点区 → 穿线孔 | 9.0 mm |
 | 穿线孔 | 1.7 × 7.0 mm |
 | 排针焊盘 | 间距 2.5 mm，每列 6 个（1 方 + 5 圆），圆心距板边 1.1 mm |
-| 触摸电极 | 6.0 × 13.0 mm，距板端 1.0 mm，覆盖全宽 |
+| 触摸电极 | 13 × 5.9 mm，距板端 1.0 mm，覆盖全宽 |
 | ISP 焊盘 | 直径 0.5 mm，圆心间距 1.5 mm |
 | 屏可视区 | 约 21.7 × 10.9 mm（0.96" 160×80） |
 

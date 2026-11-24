@@ -1,4 +1,4 @@
-﻿// 正反两面示意图：尺寸取自手绘测量图（20 px = 1 mm），沿长边自插头端起算
+// 正反两面示意图：按板卡尺寸绘制（20 px = 1 mm），沿长边自插头端起算
 'use strict';
 
 module.exports = function boardViews({ text, rect, line, figure }) {
@@ -13,8 +13,8 @@ module.exports = function boardViews({ text, rect, line, figure }) {
   const mx = (mm) => X0 + mm * MM;
 
   p.push(text(48, 46, 'MSU2_MINI 正反两面', { size: 24, weight: '600' }));
-  p.push(text(48, 74, '板长 45.5 mm、板宽 13 mm、板厚 2.0 mm；比例为 1:1，即 20 px = 1 mm', { size: 13, fill: '#555' }));
-  p.push(text(48, 96, '尺寸取自手绘测量图；器件位置为示意，不作装配依据', { size: 12, fill: '#8a5a24' }));
+  p.push(text(48, 74, '板长 45.5 mm、板宽 13 mm、板厚 2.0 mm；绘图比例 20 px = 1 mm', { size: 13, fill: '#555' }));
+  p.push(text(48, 96, '器件位置为示意，不作装配依据', { size: 12, fill: '#8a5a24' }));
 
   // ---------------------------------------------------------------- 正面
   p.push(text(48, 126, '正面：USB 触点、ISP 焊盘、穿线孔、两列排针焊盘、触摸电极', { size: 15, weight: '600' }));
@@ -57,11 +57,11 @@ module.exports = function boardViews({ text, rect, line, figure }) {
   p.push(text(mx(27.6), FY + 134, '可视区约 21.7 × 10.9 mm', { size: 11.5, anchor: 'middle', fill: '#3a6ba8' }));
   p.push(text(mx(27.6), FY + 156, '模组覆盖穿线孔、排针焊盘与主控', { size: 11.5, anchor: 'middle', fill: '#3a6ba8' }));
 
-  // 触摸电极：6 × 13 mm，距板端 1 mm
-  p.push(rect(mx(38.5), FY, 120, BH, { fill: '#f6dfc8', stroke: '#b07b3c', sw: 1.2, rx: 4 }));
-  p.push(text(mx(42.5), FY + 34, '触摸电极', { size: 12, anchor: 'middle', fill: '#8a5a24' }));
-  p.push(text(mx(42.5), FY + 54, '6 × 13', { size: 11, anchor: 'middle', fill: '#8a5a24' }));
-  p.push(text(mx(42.5), FY + 72, '网格铜箔', { size: 10.5, anchor: 'middle', fill: '#8a5a24' }));
+  // 触摸电极：13 × 5.9 mm（横向 13 mm、沿板长 5.9 mm），距板端 1 mm
+  p.push(rect(mx(38.6), FY, 118, BH, { fill: '#f6dfc8', stroke: '#b07b3c', sw: 1.2, rx: 4 }));
+  p.push(text(mx(41.6), FY + 34, '触摸电极', { size: 12, anchor: 'middle', fill: '#8a5a24' }));
+  p.push(text(mx(41.6), FY + 54, '13 × 5.9', { size: 11, anchor: 'middle', fill: '#8a5a24' }));
+  p.push(text(mx(41.6), FY + 72, '网格铜箔', { size: 10.5, anchor: 'middle', fill: '#8a5a24' }));
   p.push(text(mx(37.8), FY + 26, 'JP2', { size: 11, fill: '#3a6ba8' }));
   p.push(text(mx(37.8), FY + 222, 'JP3', { size: 11, fill: '#3a6ba8' }));
   p.push(`<circle cx="${mx(41.5)}" cy="${FY + 130}" r="16" fill="#f4f1e6" stroke="#5a5346" stroke-width="1.4"/>`);
@@ -122,7 +122,7 @@ module.exports = function boardViews({ text, rect, line, figure }) {
     'USB 触点长 12 mm、间距 2 mm；触点区到穿线孔 9 mm，因此穿线孔起于插头端 21 mm 处。',
     '屏的 FPC 从正面穿过线孔，折到背面插入 J1；J1 紧贴穿线孔靠插头一侧。',
     '排针焊盘每列 6 个、间距 2.5 mm，首脚为方焊盘；圆心距长边 1.1 mm。2.5 mm 间距与通用 2.54 mm 排针不兼容。',
-    '触摸电极为 6 × 13 mm 的阻焊层下网格铜箔，距板端 1 mm，表面无开窗、无凸起。',
+    '触摸电极为 13 × 5.9 mm 的阻焊层下网格铜箔，距板端 1 mm，表面无开窗、无凸起。',
     'ISP 焊盘直径 0.5 mm、圆心间距 1.5 mm，网络为 USB_D+ 与 3.3 V。',
   ];
   p.push(text(48, 900, '说明', { size: 13, weight: '600' }));

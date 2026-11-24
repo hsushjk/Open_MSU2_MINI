@@ -1,4 +1,4 @@
-﻿// 生成硬件仓库的自绘插图（系统框图、外形示意、连接器脚位）
+// 生成硬件仓库的自绘插图（系统框图、外形示意、连接器脚位）
 // 只依赖 Node 内置模块；输出 SVG 到 docs/images/
 'use strict';
 
@@ -99,14 +99,13 @@ function blockDiagram() {
   p.push(text(342, 168, 'U1  CH32X033F8P6', { size: 15, weight: '600' }));
   p.push(text(342, 190, 'QFN-20 · 青稞 RV32 内核', { size: 12, fill: '#555' }));
   p.push(text(342, 222, [
-    '64 KB 片内 flash',
-    '20 KB SRAM',
+    '片内 flash 64 KB（可用 62 KB）',
+    '应用区 60 KB · 20 KB SRAM',
     '48 MHz HSI，CFGR0 归零',
     'SPI1  主机 · 模式 3 · 24 MHz',
     'USBFS 全速设备',
-    'TIM3  1 kHz 时基',
-    'ADC   通道 9 / 15',
-    'USART2 115200，仅发送',
+    'SysTick 时基 ≈ 1 ms',
+    'ADC   通道 9（触摸）',
   ].join('\n'), { size: 12.5, mono: true, lh: 20 }));
 
   // SPI1 总线
@@ -158,11 +157,11 @@ function blockDiagram() {
   // 缺陷标注
   p.push(rect(684, 616, 300, 52, { fill: '#fdeeee', stroke: '#b03030', dash: '5 4' }));
   p.push(text(696, 638, '※ PA6 一脚两用：flash DO 与屏 D/C', { size: 12, fill: '#b03030' }));
-  p.push(text(696, 656, 'SPI 排针实际只能写、不能读', { size: 11.5, fill: '#b03030' }));
+  p.push(text(696, 656, '排针未引出 SPI（SCK/MOSI 只在屏与 NOR 上）', { size: 11.5, fill: '#b03030' }));
 
   p.push(rect(712, 686, 256, 52, { fill: '#fdeeee', stroke: '#b03030', dash: '5 4' }));
-  p.push(text(724, 708, '※ PA9 无负载，固件仍翻转 28 次', { size: 12, fill: '#b03030' }));
-  p.push(text(724, 726, '原厂例程遗留的幽灵片选', { size: 11.5, fill: '#b03030' }));
+  p.push(text(724, 708, '※ PA9 无负载，固件仍随屏 CS 翻转', { size: 12, fill: '#b03030' }));
+  p.push(text(724, 726, '原厂例程遗留，与屏功能无关', { size: 11.5, fill: '#b03030' }));
 
   return figure(W, H, p);
 }
@@ -205,17 +204,17 @@ function connectors() {
   ]);
 
   // JP1
-  pinRow(400, 160, 52, 4, false, 'JP1（4P，2.54 mm）', [
+  pinRow(400, 160, 52, 4, false, 'JP1（4P，2.5 mm）', [
     ['5V', ''], ['GND', ''], ['I2C_DIO', 'PC18'], ['I2C_CLK', 'PC19'],
   ]);
 
   // JP2
-  pinRow(400, 300, 52, 6, false, 'JP2（6P，2.54 mm）', [
+  pinRow(400, 300, 52, 6, false, 'JP2（6P，2.5 mm）', [
     ['5V', ''], ['GND', ''], ['3.3V', ''], ['TX1', 'PA10'], ['RX1', 'PA11'], ['CS2', 'PA1'],
   ]);
 
   // JP3
-  pinRow(400, 410, 52, 6, false, 'JP3（6P，2.54 mm）', [
+  pinRow(400, 410, 52, 6, false, 'JP3（6P，2.5 mm）', [
     ['GND', ''], ['PA9', '※ 无负载'], ['3.3V', ''], ['TX2', 'PA2'], ['RX2', 'PA3'], ['CS1', 'PA4'],
   ]);
 
