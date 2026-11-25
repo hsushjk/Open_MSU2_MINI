@@ -1,8 +1,14 @@
 # Open_MSU2_MINI 硬件资料
 
-MSU2_MINI 小屏幕（丝印 `Moriateliers` / `MN: MSU2M-24Q3`）的硬件与协议文档。板边直接做成 USB-A 插头，主控 CH32X033F8P6，NOR 为 P25D80H，屏为 ST7735S 160×80，单电极触摸。
+MSU2_MINI 小屏幕（`MN: MSU2M-24Q3`）的硬件与协议文档。板边直接做成 USB-A 插头，主控 CH32X033F8P6，NOR 为 P25D80H，屏为 ST7735S 160×80，单电极触摸。
 
 本仓库只放文档与表格，不含固件源码、不含原厂资料。
+
+## 关联项目
+
+- [`Open_MSU2_MINI_FW` - 固件](https://github.com/hsushjk/Open_MSU2_MINI_FW)
+
+- [`Open_MSU2_MINI_Console` - 上位机](https://github.com/hsushjk/Open_MSU2_MINI_Console)
 
 ## 文件
 
