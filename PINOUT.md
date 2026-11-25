@@ -146,4 +146,4 @@ CH32X033F8P6（QFN-20）共 20 脚：18 个 IO + VDD + VSS。板上丝印只有 
 - **正面（贴屏面）**：USB 金手指 4 根 → 0.96" 屏 → 触摸电极（13×5.9 mm 网格铜箔）。
 - **背面（贴装面）**，自插头端起：C1/C2/R1 → J1 → 1.7×7 mm 穿线孔 → 两列排针焊盘 → 主控 U1 与 NOR U2（夹在两列焊盘之间，正好在屏正后方） → ISP 焊盘与 JP1 → 贯通圆孔。
 
-原理图/布局图见 `images/system-block.svg`、`images/board-views.svg`、`images/connectors.svg`；厂商标称图与渲染图是**背面视角**。
+ 系统框图见 `system-block.svg`；厂商标称图与渲染图是背面视角。
